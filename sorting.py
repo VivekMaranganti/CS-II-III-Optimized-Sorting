@@ -1,3 +1,4 @@
+
 import sys
 import re
 from string import digits
@@ -44,23 +45,42 @@ def numsort(arr):
             if (arr[i]<lowNum):
                 lowNum=arr[i]
                 lowdex=i
-        print(lowNum)
         newarr.append(arr.pop(lowdex))
     return newarr
 
 
+def removespecial(unsorted):
+    dic = {}
+    for i in range(len(unsorted)):
+        word = unsorted[i]
+        if not word.isalpha():
+           newword = ''.join(filter(str.isalnum, word))
+           dic[newword] = word
+           unsorted[i] = newword
+    return dic
+
+def returnspecial(sortedl, dic):
+    for i in range(len(sortedl)):
+        if sortedl[i] in dic.keys():
+            sortedl[i] = dic[sortedl[i]]
+    return sortedl
+
+#main
+
 unsortedList = []
 userInput = sys.stdin
-removeDigits = str.maketrans('', '', digits)
+
 
 for line in userInput:
     line = line.lower().strip('\n')
-    line = ''.join(filter(str.isalnum, line))
-    finalLine = line.translate(removeDigits)
-    unsortedList.append(finalLine)
+    unsortedList.append(line)
 
+dic = removespecial(unsortedList)
+    
 sortedList = wordsort(unsortedList)
 
-for index in sortedList:
-    sys.stdout.write(index)
+sortedList = returnspecial(sortedList, dic)
+
+for word in sortedList:
+    sys.stdout.write(word)
     sys.stdout.write('\n')
