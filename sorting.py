@@ -23,6 +23,7 @@ def numtoword(num):
     return word
     
 def wordsort(arr):
+    rStrip = str.rstrip
     maxlen = 0
     for word in arr:
         if (len(word)>maxlen): maxlen = len(word)
@@ -32,7 +33,7 @@ def wordsort(arr):
     numlist = list(map(wordtonum,arr))
     numlist = numsort(numlist)
     sortedarray = list(map(numtoword,numlist))
-    sortedarray = list(map(str.rstrip, sortedarray))
+    sortedarray = list(map(rStrip, sortedarray))
     return sortedarray
 
 def numsort(arr):
@@ -44,7 +45,8 @@ def numsort(arr):
             if (arr[i]<lowNum):
                 lowNum=arr[i]
                 lowdex=i
-        newarr.append(arr.pop(lowdex))
+        popped = arr.pop(lowdex)
+        newarr.append(popped)
     return newarr
 
 
@@ -52,11 +54,16 @@ def removespecial(unsorted):
     dic = {}
     for i in range(len(unsorted)):
         word = unsorted[i]
-        if not word.isalpha() or not word.isascii():
+        isAlpha = word.isalpha()
+        isAscii = word.isascii()
+        if not isAlpha:
            newword = ''.join(filter(str.isalnum, word))
-           newword = ''.join(filter(str.isascii, newword))
            dic[newword] = word
            unsorted[i] = newword
+        if not isAscii:
+            newword = ''.join(filter(str.isascii, newword))
+            dic[newword] = word
+            unsorted[i] = newword
     return dic
 
 def returnspecial(sortedl, dic):
@@ -73,7 +80,8 @@ userInput = sys.stdin
 
 for line in userInput:
     line = line.lower().strip('\n')
-    unsortedList.append(line)
+    append = unsortedList.append
+    append(line)
 
 dic = removespecial(unsortedList)
     
