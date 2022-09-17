@@ -16,14 +16,31 @@ def numtoword(num):
     word = ""
     if not num:
         return '0'
-    while num:
+    while (num):
         mod = num % 27
         num = num // 27
         word = alpDict[mod] + word
     return word
     
+def makePartition(array, low, nums):
+    pivot, part = nums[low], array
+    for index in range(array, low):
+        if nums[index] <= pivot:
+            nums[index], nums[part] = nums[part], nums[index]
+            part += 1
+    nums[part], nums[low] = nums[low], nums[part]
+    return part
+
+def quickSort(array, low, nums):
+    if len(nums) == 1:
+        return nums
+    if array < low:
+        splitArr = makePartition(array, low, nums)
+        quickSort(array, splitArr-1, nums)
+        quickSort(splitArr+1, low, nums)
+    return nums
+
 def wordsort(arr):
-    rStrip = str.rstrip
     maxlen = 0
     for word in arr:
         if (len(word)>maxlen): maxlen = len(word)
@@ -31,24 +48,10 @@ def wordsort(arr):
         ros = " " * (maxlen-len(arr[i]))
         arr[i] += ros
     numlist = list(map(wordtonum,arr))
-    numlist = numsort(numlist)
+    numlist = quickSort(0, len(numlist)-1, numlist)
     sortedarray = list(map(numtoword,numlist))
-    sortedarray = list(map(rStrip, sortedarray))
+    sortedarray = list(map(str.rstrip, sortedarray))
     return sortedarray
-
-def numsort(arr):
-    newarr = []
-    while arr:
-        lowNum = float("inf")
-        lowdex = 0
-        for i in range(len(arr)):
-            if (arr[i]<lowNum):
-                lowNum=arr[i]
-                lowdex=i
-        popped = arr.pop(lowdex)
-        newarr.append(popped)
-    return newarr
-
 
 def removespecial(unsorted):
     dic = {}
@@ -57,9 +60,9 @@ def removespecial(unsorted):
         isAlpha = word.isalpha()
         isAscii = word.isascii()
         if not isAlpha:
-           newword = ''.join(filter(str.isalnum, word))
-           dic[newword] = word
-           unsorted[i] = newword
+            newword = ''.join(filter(str.isalnum, word))
+            dic[newword] = word
+            unsorted[i] = newword
         if not isAscii:
             newword = ''.join(filter(str.isascii, newword))
             dic[newword] = word
@@ -84,7 +87,7 @@ for line in userInput:
     append(line)
 
 dic = removespecial(unsortedList)
-    
+
 sortedList = wordsort(unsortedList)
 
 sortedList = returnspecial(sortedList, dic)
