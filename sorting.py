@@ -1,20 +1,36 @@
 import sys
 
+
+sys.setrecursionlimit(10**6)
+
+def makePartition(array, low, nums):
+    pivot, part = nums[low], array
+    for index in range(array, low):
+        if nums[index] <= pivot:
+            nums[index], nums[part] = nums[part], nums[index]
+            part += 1
+            nums[part], nums[low] = nums[low], nums[part]
+    return part
+
+def quickSort(array, low, nums):
+    if len(nums) == 1:
+        return nums
+    if array < low:
+        splitArr = makePartition(array, low, nums)
+        quickSort(array, splitArr-1, nums)
+        quickSort(splitArr+1, low, nums)
+    return nums
+
 def wordsort(arr):
-    newarr = []
-    while arr:
-        lowNum = "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
-        lowdex = 0
-        for i in range(len(arr)):
-            if (arr[i]<lowNum):
-                lowNum=arr[i]
-                lowdex=i
-        print(lowNum)
-        newarr.append(arr.pop(lowdex))
-    return newarr
-
-
-
+    maxlen = 0
+    for word in arr:
+        if (len(word)>maxlen): maxlen = len(word)
+    for i in range(len(arr)):
+        ros = " " * (maxlen-len(arr[i]))
+        arr[i] += ros
+    numlist = quickSort(0, len(arr)-1, arr)
+    sortedarray = list(map(str.rstrip, numlist))
+    return sortedarray
 
 def removespecial(unsorted):
     dic = {}
