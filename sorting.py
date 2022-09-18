@@ -22,8 +22,11 @@ def removespecial(unsorted):
         word = unsorted[i]
         isAlpha = word.isalpha()
         isAscii = word.isascii()
-        if not isAlpha or not isAscii:
+        if not isAlpha:
             newword = ''.join(filter(str.isalnum, word))
+            dic[newword] = word
+            unsorted[i] = newword
+        if not isAscii:
             newword = ''.join(filter(str.isascii, newword))
             dic[newword] = word
             unsorted[i] = newword
